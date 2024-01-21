@@ -1,6 +1,8 @@
 ---
 title: "SDS 315 HW2"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2024-01-19"
 ---
 
@@ -29,7 +31,9 @@ ggplot(Data1) + geom_histogram(aes(eval), bins = 30) + labs(x = "Course Evaluati
 
 Above shows the distribution of average course evaluation scores at UT Austin. This histogram is left skewed, with a median of `r median(Data1$eval)` and an Interquartile Range of `r IQR(Data1$eval)`.
 
-#### Part 2
+\newpage
+
+#### Part B
 ```{r 1B, echo=FALSE}
 ggplot(Data1) + geom_boxplot(aes(eval)) + facet_wrap(~native) + labs(x = "Course Evaluation Scores", title = "Distribution of Course Evaluation Scores by If Professor is a Native English Speaker")
 
@@ -40,6 +44,8 @@ Data1BNo <- filter(Data1, native == "no")
 ```
 
 Above shows the distribution of average UT Austin Course Evaluation Scores by if a professor is native English speaker. For native speakers, the median score is `r median(Data1BYes$eval)` and the IQR is `r IQR(Data1BYes$eval)`. For non-native speakers, the median score is `r median(Data1BNo$eval)` and the IQR is `r IQR(Data1BNo$eval)`.
+
+\newpage
 
 #### Part C
 ```{r 1C, echo = FALSE}
@@ -52,12 +58,16 @@ Data1CFemale <- filter(Data1, gender == 'female')
 
 Above shows the distribution of average UT Austin Course Evaluation Scores by a professor's gender. For females the median score is `r median(Data1CFemale$eval)` and the IQR is `r IQR(Data1CFemale$eval)`. For males the median score is `r median(Data1CMale$eval)` and the IQR is `r IQR(Data1CMale$eval)`.
 
+\newpage
+
 #### Part D
 ```{r 1D, echo=FALSE}
 ggplot(Data1) + geom_point(aes(x = beauty, y = eval)) + labs(x = "Phyiscal Attractiveness", y = "Course Evaluation Scores", title = "Relationship between Professors' Physical Attractiveness and Course Evaluation Scores")
 ```
 
 Above shows the relationship between UT Austin's Professors' physical attractiveness and their course evaluation score. The strength of this relationship is `r round(cor(Data1$beauty, Data1$eval), 4)` which indicates a weak, positive relationship.
+
+\newpage
 
 ### Problem 2: Bike Sharing
 ```{r Problem 2 Setup, include=FALSE}
@@ -78,6 +88,8 @@ ggplot(Data2A, aes(x=hr, y=avg_bikes)) + geom_line() + labs(x = "Hour of Day", y
 
 The line graph above shows the average amount of bike rentals in Washington DC from 2011-2012 by the hour of day. The peak amount of rentals was `r round(max(Data2A$avg_bikes))` at hour 18.
 
+\newpage
+
 #### Part B
 ```{r 2B, echo=FALSE}
 Data2B <- group_by(Data2, hr, workingday) %>%
@@ -86,6 +98,8 @@ ggplot(Data2B) + geom_line(aes(hr, avg_bikes)) + facet_wrap(~workingday) + labs(
 ```
 
 The above graph shows how many bikes on average were rented in Washington DC for every hour, a separated by day type. On non-working days, the max amount of rentals is 373 at hour 13. For working days, the max amount of rentals is 525 at hour 17.
+
+\newpage
 
 #### Part C
 ```{r 2C, echo=FALSE}
@@ -98,6 +112,8 @@ ggplot(Data2C, aes(weathersit, avg_bikes)) + geom_bar(stat = "identity") + facet
 
 Graph above shows the amount of bike rentals in Washington DC by weather, facet by if its a working day. For both working days and non working days the most common weather type is mostly clear.
 
+\newpage
+
 ### Problem 3: Capital Metro UT Ridership
 ```{r setup 3, include=FALSE}
 Data3 <- read_csv("capmetro_UT.csv")
@@ -107,7 +123,7 @@ levels=c("Mon", "Tue", "Wed","Thu", "Fri", "Sat", "Sun")),
 month = factor(month,
 levels=c("Sep", "Oct","Nov")))
 ```
-#### Part 1
+#### Part A
 ```{r 3A, echo=FALSE}
 Data3A <- group_by(Data3, hour_of_day, day_of_week, month) %>%
   summarise(avg_boarding = mean(boarding), .groups = 'drop')
@@ -121,6 +137,8 @@ In the graph above, it shows the average number of boarding on the UT Capital Me
 The peak number of boardings seems to be broadly the same, with it ranging between 3 pm and 5 pm on any given day.
 It's also highly apparent that there are four lines that are lower than all the rest on their respective graphs: Mondays in September, Wednesdays in November, Thursdays in November, and Fridays in November. The most probable explanation for this is that each of these days had UT Austin Holiday Breaks in their months (Labor Day and Thanksgiving respectively), which would lower UT Capital Metro Boardings.
 
+\newpage
+
 #### Part B
 ```{r 3B, echo=FALSE}
 ggplot(Data3) + geom_point(aes(boarding, temperature, color = weekend), alpha = 0.5) + facet_wrap(~hour_of_day) + labs(x = "Temperature", y = "Average Boardings", title = "Temperature vs Average Boardings")
@@ -128,6 +146,8 @@ ggplot(Data3) + geom_point(aes(boarding, temperature, color = weekend), alpha = 
 ```
 
 The graph above shows the relationship between temperature and UT Capital Metro average boardings, faceted by if it was a weekday or weekend. When holding hour of day and weekend status constant, there does not seem to be a noticeable effect of the amount of boardings.
+
+\newpage
 
 ### Problem 4: Wrangling the Billboard Top 100
 ```{r 4 Setup, include=FALSE}
@@ -142,8 +162,10 @@ Data4A <- group_by(Data4, performer, song) %>%
 
 Data4A <- slice(arrange(Data4A, desc(count)), 1:10)
 
-kable_classic_2(kbl(Data4A))
+kable_classic_2(kbl(Data4A,format = "latex"))
 ```
+
+\newpage
 
 #### Part B
 ```{r 4B, echo=FALSE}
@@ -155,6 +177,8 @@ ggplot(Data4B) + geom_line(aes(year, count)) + labs(title = "Number of Unique So
 ```
 
 The above graph shows musical diversity on Billboard Top 100 from 1959 to 2020. Musical Diversity here is defined by the number of unique songs that appeared in a given year. From 1966 there is a general decline in musical diversity, until 2001, where it begins to rise, then drops again in 2011, to finally rise rapidly starting in 2014.
+
+\newpage
 
 #### Part C
 ```{r 4C, echo=FALSE}
