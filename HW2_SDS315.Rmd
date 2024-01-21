@@ -13,6 +13,8 @@ Name: Madeline Boss
 
 EID: mrb5727
 
+To examine the code visit [GitHub](https://github.com/MadelineRBoss/SDS315_HW2)
+
 ### Problem 1: Beauty, or not, in the classroom
 ```{r Problem 1 Setup, include=FALSE}
 library(ggplot2)
