@@ -142,7 +142,7 @@ Data4A <- group_by(Data4, performer, song) %>%
 
 Data4A <- slice(arrange(Data4A, desc(count)), 1:10)
 
-kbl(Data4A)
+kable_classic_2(kbl(Data4A))
 ```
 
 #### Part B
