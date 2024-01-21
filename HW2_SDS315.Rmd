@@ -1,0 +1,169 @@
+---
+title: "SDS 315 HW2"
+output: html_document
+date: "2024-01-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **HW 2**
+Name: Madeline Boss
+
+EID: mrb5727
+
+### Problem 1: Beauty, or not, in the classroom
+```{r Problem 1 Setup, include=FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+Data1 <- read_csv("profs.csv")
+```
+#### Part A
+```{r 1A, echo=FALSE}
+ggplot(Data1) + geom_histogram(aes(eval), bins = 30) + labs(x = "Course Evaluation Scores", title = "Histogram of Course Evalutaion Scores")
+```
+
+Above shows the distribution of average course evaluation scores at UT Austin. This histogram is left skewed, with a median of `r median(Data1$eval)` and an Interquartile Range of `r IQR(Data1$eval)`.
+
+#### Part 2
+```{r 1B, echo=FALSE}
+ggplot(Data1) + geom_boxplot(aes(eval)) + facet_wrap(~native) + labs(x = "Course Evaluation Scores", title = "Distribution of Course Evaluation Scores by If Professor is a Native English Speaker")
+
+#simpfly median and IQR inline
+Data1BYes <- filter(Data1, native == "yes")
+Data1BNo <- filter(Data1, native == "no")
+
+```
+
+Above shows the distribution of average UT Austin Course Evaluation Scores by if a professor is native English speaker. For native speakers, the median score is `r median(Data1BYes$eval)` and the IQR is `r IQR(Data1BYes$eval)`. For non-native speakers, the median score is `r median(Data1BNo$eval)` and the IQR is `r IQR(Data1BNo$eval)`.
+
+#### Part C
+```{r 1C, echo = FALSE}
+ggplot(Data1) + geom_histogram(aes(eval), bins = 30) + labs(x = "Course Evaluation Scores", title = "Histogram of Course Evalutaion Scores by Gender") + facet_wrap(~gender)
+
+#simplfy in-line code
+Data1CMale <- filter(Data1, gender == 'male')
+Data1CFemale <- filter(Data1, gender == 'female')
+```
+
+Above shows the distribution of average UT Austin Course Evaluation Scores by a professor's gender. For females the median score is `r median(Data1CFemale$eval)` and the IQR is `r IQR(Data1CFemale$eval)`. For males the median score is `r median(Data1CMale$eval)` and the IQR is `r IQR(Data1CMale$eval)`.
+
+#### Part D
+```{r 1D, echo=FALSE}
+ggplot(Data1) + geom_point(aes(x = beauty, y = eval)) + labs(x = "Phyiscal Attractiveness", y = "Course Evaluation Scores", title = "Relationship between Professors' Physical Attractiveness and Course Evaluation Scores")
+```
+
+Above shows the relationship between UT Austin's Professors' physical attractiveness and their course evaluation score. The strength of this relationship is `r round(cor(Data1$beauty, Data1$eval), 4)` which indicates a weak, positive relationship.
+
+### Problem 2: Bike Sharing
+```{r Problem 2 Setup, include=FALSE}
+Data2 <- read_csv("bikeshare.csv")
+Data2 <- mutate(Data2, workingday = ifelse(workingday == 0, "weekend", "weekday"))
+Data2 <- mutate(Data2, weathersit = replace(weathersit, weathersit == 1, "Mostly Clear"))
+Data2 <- mutate(Data2, weathersit = replace(weathersit, weathersit == 2, "Cloudy"))
+Data2 <- mutate(Data2, weathersit = replace(weathersit, weathersit == 3, "Light Rain/Snow"))
+library(lubridate)
+```
+
+#### Part A
+```{r 2A, echo=FALSE}
+Data2A <- group_by(Data2, hr) %>%
+  summarise(avg_bikes = mean(total))
+ggplot(Data2A, aes(x=hr, y=avg_bikes)) + geom_line() + labs(x = "Hour of Day", y = "Average Bike Rentals", title = "Number of Average Bike Rentals by Hour of Day")
+```
+
+The line graph above shows the average amount of bike rentals in Washington DC from 2011-2012 by the hour of day. The peak amount of rentals was `r round(max(Data2A$avg_bikes))` at hour 18.
+
+#### Part B
+```{r 2B, echo=FALSE}
+Data2B <- group_by(Data2, hr, workingday) %>%
+  summarise(avg_bikes = mean(total), .groups = 'drop')
+ggplot(Data2B) + geom_line(aes(hr, avg_bikes)) + facet_wrap(~workingday) + labs(x = "Hour of Day", y = "Average Bike Rentals", title = "Number of Average Bike Rentals by Day Type")
+```
+
+The above graph shows how many bikes on average were rented in Washington DC for every hour, a separated by day type. On non-working days, the max amount of rentals is 373 at hour 13. For working days, the max amount of rentals is 525 at hour 17.
+
+#### Part C
+```{r 2C, echo=FALSE}
+Data2C <- filter(Data2, hr == 9)
+Data2C <- group_by(Data2C, workingday, weathersit) %>%
+  summarise(avg_bikes = mean(total), .groups = 'drop')
+
+ggplot(Data2C, aes(weathersit, avg_bikes)) + geom_bar(stat = "identity") + facet_wrap(~workingday) + labs(x = "Weather Types", y = "Average Bike Rentals", title = "Average Bike Rentals at 9AM by Weather, Faceted by if its a Working Day")
+```
+
+Graph above shows the amount of bike rentals in Washington DC by weather, facet by if its a working day. For both working days and non working days the most common weather type is mostly clear.
+
+### Problem 3: Capital Metro UT Ridership
+```{r setup 3, include=FALSE}
+Data3 <- read_csv("capmetro_UT.csv")
+Data3 = mutate(Data3,
+day_of_week = factor(day_of_week,
+levels=c("Mon", "Tue", "Wed","Thu", "Fri", "Sat", "Sun")),
+month = factor(month,
+levels=c("Sep", "Oct","Nov")))
+```
+#### Part 1
+```{r 3A, echo=FALSE}
+Data3A <- group_by(Data3, hour_of_day, day_of_week, month) %>%
+  summarise(avg_boarding = mean(boarding), .groups = 'drop')
+
+ggplot(Data3A) + geom_line(aes(hour_of_day, avg_boarding, color = month)) + facet_wrap(~day_of_week) + labs(x = "Hour", y = "Average Number of Boardings", title = "Average Amount of Boardings Per Hour by Month and Day of Week")
+                                            
+```
+
+In the graph above, it shows the average number of boarding on the UT Capital Metro from September to November 2018. Each line represents a month, and is faceted by the day of week.
+
+The peak number of boardings seems to be broadly the same, with it ranging between 3 pm and 5 pm on any given day.
+It's also highly apparent that there are four lines that are lower than all the rest on their respective graphs: Mondays in September, Wednesdays in November, Thursdays in November, and Fridays in November. The most probable explanation for this is that each of these days had UT Austin Holiday Breaks in their months (Labor Day and Thanksgiving respectively), which would lower UT Capital Metro Boardings.
+
+#### Part B
+```{r 3B, echo=FALSE}
+ggplot(Data3) + geom_point(aes(boarding, temperature, color = weekend), alpha = 0.5) + facet_wrap(~hour_of_day) + labs(x = "Temperature", y = "Average Boardings", title = "Temperature vs Average Boardings")
+
+```
+
+The graph above shows the relationship between temperature and UT Capital Metro average boardings, faceted by if it was a weekday or weekend. When holding hour of day and weekend status constant, there does not seem to be a noticeable effect of the amount of boardings.
+
+### Problem 4: Wrangling the Billboard Top 100
+```{r 4 Setup, include=FALSE}
+Data4 <- read_csv("billboard.csv")
+library(kableExtra)
+```
+
+#### Part A
+```{r 4A, echo=FALSE}
+Data4A <- group_by(Data4, performer, song) %>%
+  summarise(count = sum(weeks_on_chart), .groups = 'drop')
+
+Data4A <- slice(arrange(Data4A, desc(count)), 1:10)
+
+kbl(Data4A)
+```
+
+#### Part B
+```{r 4B, echo=FALSE}
+Data4B <- group_by(Data4, year) %>%
+  summarise(count = length(unique(song)))
+Data4B <- filter(Data4B, year != 1958, year != 2021)
+
+ggplot(Data4B) + geom_line(aes(year, count)) + labs(title = "Number of Unique Songs per Year")
+```
+
+The above graph shows musical diversity on Billboard Top 100 from 1959 to 2020. Musical Diversity here is defined by the number of unique songs that appeared in a given year. From 1966 there is a general decline in musical diversity, until 2001, where it begins to rise, then drops again in 2011, to finally rise rapidly starting in 2014.
+
+#### Part C
+```{r 4C, echo=FALSE}
+Data4C <- group_by(Data4, performer, song) %>%
+  summarise(count = max(weeks_on_chart), .groups = 'drop')
+Data4C <- filter(Data4C, count >= 10)
+Data4C <- group_by(Data4C, performer) %>%
+  summarise(count = length(unique(song)))
+Data4C <- filter(Data4C, count >= 30)
+
+ggplot(Data4C, aes(performer, count)) + geom_col() + coord_flip() + labs(title = "Artists' Amount of Ten Week Hits")
+```
+
+The graph above shows artist with at least 30 ten-week hits. Ten weeks are defined as songs with at least ten years on Billboard Top 100.
