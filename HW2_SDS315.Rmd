@@ -29,7 +29,7 @@ Data1 <- read_csv("profs.csv")
 ggplot(Data1) + geom_histogram(aes(eval), bins = 30) + labs(x = "Course Evaluation Scores", title = "Histogram of Course Evalutaion Scores")
 ```
 
-Above shows the distribution of average course evaluation scores at UT Austin. This histogram is left skewed, with a median of `r median(Data1$eval)` and an Interquartile Range of `r IQR(Data1$eval)`.
+Above shows the distribution of average course evaluation scores at UT Austin. This histogram is left skewed, with a median score `r median(Data1$eval)`, which indicates most professors score highly.
 
 \newpage
 
@@ -43,8 +43,7 @@ Data1BNo <- filter(Data1, native == "no")
 
 ```
 
-Above shows the distribution of average UT Austin Course Evaluation Scores by if a professor is native English speaker. For native speakers, the median score is `r median(Data1BYes$eval)` and the IQR is `r IQR(Data1BYes$eval)`. For non-native speakers, the median score is `r median(Data1BNo$eval)` and the IQR is `r IQR(Data1BNo$eval)`.
-
+Above shows the distribution of average UT Austin Course Evaluation Scores by if a professor is native English speaker. For native speakers, the median score is `r median(Data1BYes$eval)`, while for non-native speakers, the median score is `r median(Data1BNo$eval)`, which indicates that native speakers are more likely to score well on course evaluations. 
 \newpage
 
 #### Part C
@@ -56,7 +55,7 @@ Data1CMale <- filter(Data1, gender == 'male')
 Data1CFemale <- filter(Data1, gender == 'female')
 ```
 
-Above shows the distribution of average UT Austin Course Evaluation Scores by a professor's gender. For females the median score is `r median(Data1CFemale$eval)` and the IQR is `r IQR(Data1CFemale$eval)`. For males the median score is `r median(Data1CMale$eval)` and the IQR is `r IQR(Data1CMale$eval)`.
+Above shows the distribution of average UT Austin Course Evaluation Scores by a professor's gender. For females the median score is `r median(Data1CFemale$eval)` and for males the median score is `r median(Data1CMale$eval)`, which indicates males do better on course evaluations.
 
 \newpage
 
@@ -65,7 +64,7 @@ Above shows the distribution of average UT Austin Course Evaluation Scores by a 
 ggplot(Data1) + geom_point(aes(x = beauty, y = eval)) + labs(x = "Phyiscal Attractiveness", y = "Course Evaluation Scores", title = "Relationship between Professors' Physical Attractiveness and Course Evaluation Scores")
 ```
 
-Above shows the relationship between UT Austin's Professors' physical attractiveness and their course evaluation score. The strength of this relationship is `r round(cor(Data1$beauty, Data1$eval), 4)` which indicates a weak, positive relationship.
+Above shows the relationship between UT Austin's Professors' physical attractiveness and their course evaluation score. The strength of this relationship is `r round(cor(Data1$beauty, Data1$eval), 4)` which indicates there's little connection between beauty and course evaluation scores.
 
 \newpage
 
@@ -86,7 +85,7 @@ Data2A <- group_by(Data2, hr) %>%
 ggplot(Data2A, aes(x=hr, y=avg_bikes)) + geom_line() + labs(x = "Hour of Day", y = "Average Bike Rentals", title = "Number of Average Bike Rentals by Hour of Day")
 ```
 
-The line graph above shows the average amount of bike rentals in Washington DC from 2011-2012 by the hour of day. The peak amount of rentals was `r round(max(Data2A$avg_bikes))` at hour 18.
+The line graph above shows the average amount of bike rentals in Washington DC from 2011-2012 by the hour of day. The peak amount of rentals was `r round(max(Data2A$avg_bikes))` at hour `r which.max(Data2A$avg_bikes) - 1`.
 
 \newpage
 
@@ -97,7 +96,7 @@ Data2B <- group_by(Data2, hr, workingday) %>%
 ggplot(Data2B) + geom_line(aes(hr, avg_bikes)) + facet_wrap(~workingday) + labs(x = "Hour of Day", y = "Average Bike Rentals", title = "Number of Average Bike Rentals by Day Type")
 ```
 
-The above graph shows how many bikes on average were rented in Washington DC for every hour, a separated by day type. On non-working days, the max amount of rentals is 373 at hour 13. For working days, the max amount of rentals is 525 at hour 17.
+The above graph shows how many bikes on average were rented in Washington DC for every hour, a separated by day type. On non-working days, the max amount of rentals is `r round(max(select(filter(Data2B, workingday == "weekend"), avg_bikes)))` at hour 13. For working days, the max amount of rentals is `r round(max(select(filter(Data2B, workingday == "weekday"), avg_bikes)))` at hour 17.
 
 \newpage
 
@@ -135,7 +134,7 @@ ggplot(Data3A) + geom_line(aes(hour_of_day, avg_boarding, color = month)) + face
 In the graph above, it shows the average number of boarding on the UT Capital Metro from September to November 2018. Each line represents a month, and is faceted by the day of week.
 
 The peak number of boardings seems to be broadly the same, with it ranging between 3 pm and 5 pm on any given day.
-It's also highly apparent that there are four lines that are lower than all the rest on their respective graphs: Mondays in September, Wednesdays in November, Thursdays in November, and Fridays in November. The most probable explanation for this is that each of these days had UT Austin Holiday Breaks in their months (Labor Day and Thanksgiving respectively), which would lower UT Capital Metro Boardings.
+It's also highly apparent that there are four lines that are lower than all the rest on their respective graphs: Mondays in September, Wednesdays in November, Thursdays in November, and Fridays in November. The most probable explanation for this is that each of these days had UT Austin Holiday Break in their month (Labor Day and Thanksgiving respectively), which would lower UT Capital Metro Boardings.
 
 \newpage
 
@@ -156,6 +155,7 @@ library(kableExtra)
 ```
 
 #### Part A
+
 ```{r 4A, echo=FALSE}
 Data4A <- group_by(Data4, performer, song) %>%
   summarise(count = sum(weeks_on_chart), .groups = 'drop')
