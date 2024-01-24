@@ -140,7 +140,7 @@ It's also highly apparent that there are four lines that are lower than all the 
 
 #### Part B
 ```{r 3B, echo=FALSE}
-ggplot(Data3) + geom_point(aes(boarding, temperature, color = weekend), alpha = 0.5) + facet_wrap(~hour_of_day) + labs(x = "Temperature", y = "Average Boardings", title = "Temperature vs Average Boardings")
+ggplot(Data3) + geom_point(aes(y = boarding, x = temperature, color = weekend), alpha = 0.5) + facet_wrap(~hour_of_day) + labs(x = "Temperature", y = "Average Boardings", title = "Temperature vs Average Boardings")
 
 ```
 
