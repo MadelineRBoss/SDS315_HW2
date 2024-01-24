@@ -35,7 +35,7 @@ Above shows the distribution of average course evaluation scores at UT Austin. T
 
 #### Part B
 ```{r 1B, echo=FALSE}
-ggplot(Data1) + geom_boxplot(aes(eval)) + facet_wrap(~native) + labs(x = "Course Evaluation Scores", title = "Distribution of Course Evaluation Scores by If Professor is a Native English Speaker")
+ggplot(Data1) + geom_boxplot(aes(eval, x = native)) + labs(x = "Native Speaker Status", y = "Course Evaluation Scores", title = "Distribution of Course Evaluation Scores by If Professor is a Native English Speaker")
 
 #simpfly median and IQR inline
 Data1BYes <- filter(Data1, native == "yes")
